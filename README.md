@@ -80,15 +80,6 @@ Run the container (requires Redis running separately):
 docker run -p 8080:8080 -e REDIS_ADDR=host.docker.internal:6379 rate-limiter
 ```
 
-## Example
-
-```bash
-export RATE_LIMIT_ALGORITHM=sliding_window
-export RATE_LIMIT_CAPACITY=5
-export RATE_LIMIT_RATE=60  # 5 requests per minute
-go run cmd/server/main.go
-```
-
 ## Consistency
 
 Operations are atomic using Redis Lua scripts, ensuring consistency in distributed environments.
