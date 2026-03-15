@@ -29,7 +29,7 @@ func main() {
 	}
 
 	// Create rate limiter config from env
-	algorithm := ratelimiter.Algorithm(getEnv("RATE_LIMIT_ALGORITHM", "token_bucket"))
+	algorithm := ratelimiter.Algorithm(getEnv("RATE_LIMIT_ALGORITHM", "sliding_window"))
 	capacity, _ := strconv.ParseInt(getEnv("RATE_LIMIT_CAPACITY", "10"), 10, 64)
 	rate, _ := strconv.ParseInt(getEnv("RATE_LIMIT_RATE", "6"), 10, 64)
 	redisKey := getEnv("RATE_LIMIT_REDIS_KEY", "ratelimit")
@@ -57,15 +57,15 @@ func rateLimitMiddleware(limiter ratelimiter.RateLimiter, next http.HandlerFunc)
 		key := strings.Split(r.RemoteAddr, ":")[0]
 
 		allowed, err := limiter.Allow(r.Context(), key)
-		log.Printf("Rate limit check for key %s: allowed=%v, err=%v", key, allowed, err)
+		// log.Printf("Rate limit check for key %s: allowed=%v, err=%v", key, allowed, err)
 		if err != nil {
-			log.Printf("Rate limiter error: %v", err)
+			// log.Printf("Rate limiter error: %v", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
 		if !allowed {
-			log.Printf("Rate limit exceeded for key %s", key)
+			// log.Printf("Rate limit exceeded for key %s", key)
 			http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
 			return
 		}

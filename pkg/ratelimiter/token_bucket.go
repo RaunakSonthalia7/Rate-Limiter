@@ -52,7 +52,7 @@ func (t *tokenBucketLimiter) Allow(ctx context.Context, key string) (bool, error
 
 	now := time.Now().Unix()
 	result, err := t.rdb.Eval(ctx, script, []string{redisKey}, t.config.Capacity, t.config.Rate, now).Result()
-	fmt.Println("result", result)
+	// fmt.Println("result", result)
 	if err != nil {
 		return false, err
 	}
